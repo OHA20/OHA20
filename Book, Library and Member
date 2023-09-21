@@ -1,0 +1,239 @@
+package application;
+
+public class Member extends Thread{
+	
+	//The declaration of the main library and its strings
+	Library library1 = new Library();
+	String isbn = "Ab11228";
+	
+	public Member()
+	{
+		run();
+	}
+	
+	public void run()
+	{
+		//The libraries functions
+		library1.findBookIndex();
+		library1.loanBook();
+		
+		
+		//Waiting 2000 milliseconds before proceeding with the next function
+		try 
+		{
+		    Thread.sleep(2000);
+		}
+		catch(InterruptedException e) 
+		{
+		    System.out.println("Interrupted");
+		}
+		
+		library1.returnBook();
+	}
+	
+	public static void main (String[] args)
+	{
+		new Member();
+	}
+}
+
+===========================================================================================================================================================================================================================================================
+
+
+package application;
+import java.util.*;
+
+public class Library extends Thread{
+	
+	//Our 3 arraylists/collections
+	ArrayList<Book>librarylist = new ArrayList<Book>();
+	ArrayList<Book>templibrarylist = new ArrayList<Book>();
+	ArrayList<Member>memberlist = new ArrayList<Member>();
+
+
+	public Library() 
+	{
+		//Create Book
+		String authorFirstName = "Big";
+		String authorSurname = "Ben";
+		String isbn = "Ab11228";
+		int publishYear = 2005;
+		Book b1 = new Book(authorFirstName, authorSurname, isbn, publishYear);
+		//Added book to an arraylist
+		librarylist.add(b1);
+	}
+	
+	public int findBookIndex()
+	{
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Enter the ISBN of the book you would like to find");
+		String isbn = scan.nextLine();
+		int index = 0;
+		
+		
+		//This searches the arraylist and ensures that there is a book with a matching Isbn
+		
+		for(Book b: librarylist)
+		{
+			if(isbn.equalsIgnoreCase(b.getIsbn()))
+			{
+				index = librarylist.indexOf(b);
+			}
+			else
+			{
+				index = -1;
+			}
+		}
+		
+		System.out.println("The Index is: " + index);
+		return index;
+	}
+	
+	public Book loanBook()
+	{
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Enter the index of the book you would like to loan");
+		int index = scan.nextInt();
+		Book nBook = null;
+		
+		//This will match the index of the book with a book within the arraylist
+		
+		for(Book b: librarylist)
+		{
+			if(librarylist.get(index) != null)
+			{
+				nBook = b;
+			}
+			else
+			{
+				nBook = null;
+			}
+		}
+		
+		//Book that is there is displayed
+		System.out.println("Borrowed book is: " + nBook.toString());
+		//Book is removed from main arraylist and added to a temporary list
+		librarylist.remove(nBook);
+		templibrarylist.add(nBook);
+		return nBook;
+	}
+	
+	public Book returnBook()
+	{
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Enter the isbn of the book you would like to return");
+		String isbn = scan.nextLine();
+		Book nBook = null;
+		
+		//
+		for(Book b: templibrarylist)
+		{
+			if(isbn.equalsIgnoreCase(b.getIsbn()))
+			{
+				nBook = b;
+			}
+			else
+			{
+				System.out.println("Book not found");
+			}
+		}
+		
+		System.out.println("Returned book is: " + nBook.toString());
+		//Book is then return back to main arraylist
+		templibrarylist.remove(nBook);
+		librarylist.add(nBook);
+		return nBook;
+	}
+	public static void main(String[] args) 
+	{
+		new Library();
+		
+		//Creating 2 new members
+		Member member1 = new Member();
+		Member member2 = new Member();	
+		
+		//Creating 2 new threads
+		Thread t1= new Thread(member1);
+		Thread t2= new Thread(member2);
+		
+		//1st thread has been started
+		t1.start();
+		
+		//join function used to prevent interruption with a catch to check errors
+		try {
+			t1.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		//2nd thread has been started
+		t2.start();
+		
+		//join function used again to prevent interruption with a catch to check errors
+		try {
+			t2.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		//this will end the 2 threads
+		t1.interrupt();
+		t2.interrupt();
+	}
+}
+
+===========================================================================================================================================================================================================================================================
+
+package application;
+public class Book {
+	private String authorFirstName;
+	private String authorSurname;
+	private String isbn;
+	private int publishYear;
+
+	public Book(String authorFirstName, String authorSurname, String isbn, int publishYear) {
+		this.authorFirstName = authorFirstName;
+		this.authorSurname = authorSurname;
+		this.isbn = isbn;
+		this.publishYear = publishYear;
+	}
+
+	public String getAuthorFirstName() {
+		return authorFirstName;
+	}
+
+	public void setAuthorFirstName(String authorFirstName) {
+		this.authorFirstName = authorFirstName;
+	}
+
+	public String getAuthorSurname() {
+		return authorSurname;
+	}
+
+	public void setAuthorSurname(String authorSurname) {
+		this.authorSurname = authorSurname;
+	}
+
+	public String getIsbn() {
+		return isbn;
+	}
+
+	public void setIsbn(String isbn) {
+		this.isbn = isbn;
+	}
+
+	public int getPublishYear() {
+		return publishYear;
+	}
+
+	public void setPublishYear(int publishYear) {
+		this.publishYear = publishYear;
+	}
+
+	@Override
+	public String toString() {
+		return "Book [authorFirstName=" + authorFirstName + ", authorSurname=" + authorSurname + ", isbn=" + isbn
+				+ ", publishYear=" + publishYear + "]";
+	}
+
+}

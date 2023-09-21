@@ -1,0 +1,415 @@
+#define _CRT_SECURE_NO_WARNINGS 1
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
+
+#define SIZE 5
+
+//Book struct
+struct book
+{
+	int identifier;
+	char name[30], author[30], cName[30];
+	int status;
+	int date;
+	bool loaned;
+	int booksLoaned;
+};
+
+//LinearNode 
+struct LinearNode
+{
+	struct book* element;
+	struct LinearNode* next;
+};
+
+struct LinearNode* front = NULL;
+struct LinearNode* last = NULL;
+
+//File used for file handling
+FILE* fp;
+
+void main()
+{
+	//Save and file handling system
+
+	void addBook(FILE *);
+	void getFromFileAndDisplay(FILE*);
+	fp = fopen("Book.dat", "r");
+	if (fp == NULL)
+	{
+		addBook(fp);
+	}
+	else
+	{
+		getFromFileAndDisplay(fp);
+	}
+}
+
+void menu()
+{
+	int select;
+	void addBook(FILE *);
+	void borrowBook();
+	void exitSystem();
+	void viewAllBook();
+	void deleteBook();
+	void viewSpecificBook();
+	void viewPopularBook();
+	void returnBook();
+	void viewLoanedBooks();
+
+	//Options selected based on corresponding int
+
+	printf("\n\n Select option \n 1. Add a book \n 2. Borrow a book \n 3. Return a book \n 4. Delete book \n 5. View all book \n 6. View specific book \n 7. View most popular and least popular book \n 8. View loaned books \n 9. Exit system \n \n");
+	scanf("%d", &select);
+
+	if (select == 1)
+	{
+		addBook(fp);
+	}
+
+	if (select == 2)
+	{
+		borrowBook();
+	}
+
+	if (select == 3)
+	{
+		returnBook();
+	}
+
+	if (select == 4)
+	{
+		deleteBook();
+	}
+
+	if (select == 5)
+	{
+		viewAllBook();
+	}
+
+	if (select == 6)
+	{
+		viewSpecificBook();
+	}
+
+	if (select == 7)
+	{
+		viewPopularBook();
+	}
+
+	if (select == 8)
+	{
+		viewLoanedBooks();
+	}
+
+	if (select == 9)
+	{
+		exitSystem();
+	}
+}
+
+void addBook(FILE *fp)
+{
+	int identifier = 0;
+	char name[30], author[30], cName[30];
+	int status = 0;
+	int date = 0;
+	bool loaned = false;
+	int booksLoaned = 0;
+
+	printf("Enter the book identifier (in the format xxxx-xxxx)");
+	scanf("%d", &identifier);
+
+	printf("Enter the book name");
+	scanf("%s", name);
+
+	printf("Enter the year of publication (must be before 2017)");
+	scanf("%d", &date);
+
+	//Ensure if date is more than 2017 the date will be corrected
+	if (date > 2017)
+	{
+		date = 2017;
+	}
+
+	printf("Is this book loaned or not? 1 = yes 2 = no");
+	scanf("%d", &status);
+
+	//Corresponding int decides loan status
+	if (status == 1)
+	{
+		loaned = true;
+		booksLoaned++;
+	}
+	else if (status == 2)
+	{
+		loaned = false;
+	}
+	else
+	{
+		status = 2;
+		loaned = false;
+	}
+
+	printf("Enter the customer name");
+	scanf("%s", cName);
+
+	if (loaned == false)
+	{
+		cName == " ";
+	}
+
+	//Book details are written to file
+	fp = fopen("Book.dat", "w");
+	fprintf(fp,"/n Book details are:\n identifier: %d, \n name: %s, \n date: %d, \n status: %d, \n customer name: %s \n \n", identifier, name, date, status, cName);
+	scanf("");
+
+	//Details assigned to the nodes
+	struct book* anElement;
+	struct LinearNode* aNode;
+	aNode = (struct LinearNode*)malloc(sizeof(struct LinearNode));
+	anElement = (struct book*)malloc(sizeof(struct book));
+	anElement->identifier = identifier;
+	anElement->name[29] = name[29];
+	anElement->date = date;
+	anElement->author[29] = author[29];
+	anElement->cName[29] = cName[29];
+	anElement->loaned = loaned;
+	anElement->booksLoaned = booksLoaned;
+
+	aNode->next = NULL;
+
+	if (aNode == NULL)
+	{
+		printf("\n error");
+	}
+	else
+	{
+		aNode->next = NULL;
+		aNode->element = anElement;
+	}
+
+	if (front == NULL)
+	{
+		front = aNode;
+		last = aNode;
+	}
+	else
+	{
+		aNode->next = front;
+		front = aNode;
+	}
+
+	void menu();
+	menu();
+}
+
+
+void getFromFileAndDisplay(FILE* fp)
+{
+	//Function occurs if file is found to exist
+	printf("file has been found \n");
+
+
+	fclose(fp);
+	void menu();
+	menu();
+
+}
+
+void borrowBook()
+{
+	int identifiers = 0;
+	printf("Enter the identifier of the book you would like to borrow");
+	scanf("\n %d", &identifiers);
+
+	//For loop cycles through to find matching identifier
+	for (struct LinearNode* present = front; present != NULL; present = present->next)
+	{
+		if (identifiers = present->element->identifier && present->element->loaned == false)
+		{
+			printf("\nBook is now loaned");
+			present->element->loaned = true;
+			present->element->booksLoaned++;
+		}
+		else if (identifiers = present->element->identifier && present->element->loaned == true)
+		{
+			printf("\nBook has already been loaned");
+		}
+	}
+
+	void menu();
+	menu();
+}
+
+void returnBook()
+{
+	int identifiers = 0;
+	printf("Enter the identifier of the book you would like to return");
+	scanf("\n %d", &identifiers);
+
+	for (struct LinearNode* present = front; present != NULL; present = present->next)
+	{
+		if (identifiers = present->element->identifier && present->element->loaned == true)
+		{
+			printf("\nBook has been returned");
+			present->element->loaned = false;
+		}
+		else if (identifiers = present->element->identifier && present->element->loaned == false)
+		{
+			printf("\nBook was not loaned");
+		}
+	}
+
+	void menu();
+	menu();
+}
+
+void deleteBook()
+{
+	//When date and identifier fulfil the requirements the file is deleted
+	struct LinearNode *select;
+	int identifiers = 0;
+
+	if (front == NULL)
+	{
+		printf("\nerror");
+	}
+	else
+	{
+		printf("\nEnter the book identifier");
+		scanf("%d", &identifiers);
+
+		select = front;
+		
+		if (identifiers = select->element->identifier && select->element->date < 2010)
+		{
+			printf("book has been deleted");
+			free(select);
+		}
+		else
+		{
+			printf("error");
+		}
+	}
+
+	void menu();
+	menu();
+}
+
+
+void viewAllBook()
+{
+	struct LinearNode* present;
+
+	if (front == NULL)
+	{
+		printf("\n error");
+	}
+	else
+	{
+		present = front;
+		while (present != NULL)
+		{
+			printf("Identifier is %d\n", present->element->identifier);
+			printf("Name is %s\n", present->element->name);
+			printf("Author is %s\n", present->element->author);
+			printf("cName is %s\n", present->element->cName);
+			printf("Loaned: %d \n\n", present->element->booksLoaned);
+			present = present->next;
+		}
+	}
+
+	void menu();
+	menu();
+}
+
+void viewSpecificBook()
+{
+	int identifiers = 0;
+	printf("Enter the identifier of the book details you want to view");
+	scanf("%d", &identifiers);
+
+	for (struct LinearNode* present = front; present != NULL; present = present->next)
+	{
+		if (identifiers = present->element->identifier)
+		{
+			printf("Identifier is %d\n", present->element->identifier);
+			printf("Name is %s\n", present->element->name);
+			printf("Author is %s\n", present->element->author);
+			printf("cName is %s\n", present->element->cName);
+			printf("Loaned: %d \n\n", present->element->booksLoaned);
+		}
+	}
+
+	void menu();
+	menu();
+}
+
+void viewLoanedBooks()
+{
+	//Any books with a loan status that is currently true are viewed
+	for (struct LinearNode* present = front; present != NULL; present = present->next)
+	{
+		if (present->element->loaned == true)
+		{
+			printf("Identifier is %d\n", present->element->identifier);
+			printf("Name is %s\n", present->element->name);
+			printf("Author is %s\n", present->element->author);
+			printf("cName is %s\n", present->element->cName);
+			printf("Loaned: %d \n\n", present->element->booksLoaned);
+		}
+	}
+
+	void menu();
+	menu();
+}
+
+void viewPopularBook()
+{
+	int select = 0;
+	int i = 0;
+	int x = 0;
+	printf("1. To view most popular book \n2. To view least popular book");
+	scanf("%d", &select);
+
+	if (select == 1)
+	{
+		for (struct LinearNode* present = front; present != NULL; present = present->next)
+		{
+			i++;
+
+			if (select = present->element->identifier && i > present->element->booksLoaned)
+			{
+				printf("Identifier is %d\n", present->element->identifier);
+				printf("Name is %s\n", present->element->name);
+				printf("Author is %s\n", present->element->author);
+				printf("cName is %s\n", present->element->cName);
+				printf("Loaned: %d \n\n", present->element->booksLoaned);
+			}
+		}
+	}
+	else if (select == 2)
+	{
+		for (struct LinearNode* present = front; present != NULL; present = present->next)
+		{
+			x++;
+			if (select = present->element->identifier && x < present->element->booksLoaned)
+			{
+				printf("Identifier is %d\n", present->element->identifier);
+				printf("Name is %s\n", present->element->name);
+				printf("Author is %s\n", present->element->author);
+				printf("cName is %s\n", present->element->cName);
+				printf("Loaned: %d \n\n", present->element->booksLoaned);
+			}
+		}
+	}
+}
+
+void exitSystem()
+{
+	printf("Exiting system \n\nFiles will be copied to the database \n\n\n");
+	exit(0);
+}

@@ -1,0 +1,45 @@
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.*;
+import java.io.*;
+
+public class AlphabetMemoriser extends Thread
+{
+	public static void main(String[] args) throws IOException
+	{
+		//Executor service created
+		ExecutorService executor = Executors.newFixedThreadPool(10);
+		
+		//The file required are declared and the directory of the text file used is defined
+		File file = new File("/Users/ollie/Downloads/words.txt");
+		
+		//A scanner is define using the file as a reference
+		Scanner scan = new Scanner(file);
+		
+		//FileWriter created
+		FileWriter fileWriter = new FileWriter("/Users/ollie/Downloads/memory.txt");
+		
+		String text = "";
+		//The scanner checks if another line is available before repeating and prints the line before sleeping for half a second
+		while(scan.hasNextLine())
+		{
+			System.out.println(scan.nextLine());
+		    text = scan.nextLine()  + "\n";
+		    //File writer adds text to file memory.txt
+		    fileWriter.write(text);
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		//Executor is shutdown and file writer is closed
+		executor.shutdown();
+		try {
+			fileWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+}

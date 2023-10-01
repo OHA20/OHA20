@@ -1,0 +1,207 @@
+---------------------------------------------------------------------------------------------
+Car
+---------------------------------------------------------------------------------------------
+import java.util.*;
+
+public class Car 
+{
+	int reg = 0;
+	int year = 0;
+	String engine = " ";
+	Boolean passed = false;
+	
+	public Car(int cReg, int cYear, String cEngine, Boolean cPassed)
+	{
+		reg = cReg;
+		year = cYear;
+		engine = cEngine;
+		passed = cPassed;
+	}
+	
+	public String toString()
+	{
+		return "\nRegistration Number: " + this.reg + "\nCar Year: " + this.year + "\nCar Engine: " + this.engine + "\nNCT Passed: " + this.passed;
+	}
+	
+	public static void main(String[] args) 
+	{
+	}
+}
+---------------------------------------------------------------------------------------------
+Driver
+---------------------------------------------------------------------------------------------
+import java.util.*;
+
+public class Driver 
+{
+	int license = 0;
+	String name = "";
+	int points = 0;
+	int number = 0;
+	
+	public Driver(int dLicense, String dName, int dPoints, int dNumber)
+	{
+		this.license = dLicense;
+		this.name = dName;
+		this.points = dPoints;
+		this.number = dNumber;
+	}
+	
+	public String toString()
+	{
+		return "License Number: " + this.license + "\nDriver Name: " + this.name + "\nDriver Points: " + this.points + "\nDriver Number: " + this.number;
+	}
+	
+	public static void main(String[] args) 
+	{
+	}
+}
+---------------------------------------------------------------------------------------------
+Policy
+---------------------------------------------------------------------------------------------
+
+public class Policy 
+{
+	String id = "";
+	int premium = 0;
+	int claims = 0;
+	Car car1 = null;
+	Driver driver1 = null;
+	
+	public Policy(String pId, int pPremium, int pClaims, Car pCar, Driver pDriver)
+	{
+		this.id = pId;
+		this.premium = pPremium;
+		this.claims = pClaims;
+		this.car1 = pCar;
+		this.driver1 = pDriver;
+	}
+	
+	public int getPremium()
+	{
+		return this.premium;
+	}
+	
+	public void setPremium(int pPremium)
+	{
+		this.premium = pPremium;
+	}
+	
+	public int getClaims()
+	{
+		return this.claims;
+	}
+	
+	public void setClaims(int pClaims)
+	{
+		this.claims = pClaims;
+	}
+	
+	public String toString()
+	{
+		return "\nID: " + id + "\nPremium: " + premium + "\nClaims: " + claims + "\n\nCar: " + car1 + "\n\nDriver: " + driver1;
+	}
+	
+	public static void main(String[] args) 
+	{
+	}
+}
+---------------------------------------------------------------------------------------------
+Insurance Firm (Driver)
+---------------------------------------------------------------------------------------------
+import java.util.*;
+
+public class InsuranceFirm {
+	
+	Driver D1;
+	Car C1;
+	Policy P1;
+	
+	ArrayList<Policy>policyList = new ArrayList<Policy>();
+	
+	public InsuranceFirm()
+	{
+		CreateDriver();
+		CreateCar();
+		CreatePolicy();
+		DeletePolicy();
+		IncreasePremium();
+		PremiumAmount();
+		ShowClaims();
+		
+	}
+	
+	public void CreateDriver()
+	{
+		int l = 210;
+		String n = "Ben";
+		int p = 0;
+		int no = 1;
+		
+		D1 = new Driver(l,n,p,no);
+		System.out.println(D1.toString());
+	}
+	
+	public void CreateCar()
+	{
+		int r = 340;
+		int y = 2003;
+		String e = "Small";
+		Boolean i = true;
+		
+		C1 = new Car(r,y,e,i);
+		System.out.println(C1.toString());
+	}
+
+	public void CreatePolicy()
+	{
+		String id = "C41";
+		int p = 250;
+		int c = 20;
+		P1 = new Policy(id,p,c,C1,D1);
+		policyList.add(P1);
+		System.out.println(P1.toString());
+	}
+	
+	public void DeletePolicy()
+	{
+		System.out.println("Removing Policy");
+		policyList.remove(P1);
+		
+		//Then Readd
+		String id = "C41";
+		int p = 250;
+		int c = 20;
+		P1 = new Policy(id,p,c,C1,D1);
+		policyList.add(P1);
+	}
+	
+	public void IncreasePremium()
+	{
+		int prem = P1.getPremium() + P1.getPremium()*5;
+		P1.setPremium(prem);
+		System.out.println("New Premium: " + P1);
+	}
+	
+	public void ShowClaims()
+	{	
+		int i = -1;
+		
+		for(;;)
+		{
+			i++;
+			policyList.get(i);
+			System.out.println("\nShowing Claims: " + P1.getClaims());
+		}
+	}
+	
+	public void PremiumAmount()
+	{
+		System.out.println("\n" + "Policy Premium Total: " + P1.getPremium());
+	}
+
+	public static void main(String[] args) 
+	{
+		new InsuranceFirm();
+	}
+}

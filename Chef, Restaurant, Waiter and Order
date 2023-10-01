@@ -1,0 +1,175 @@
+---------------------------------------------------------------------------------------------
+Chef
+---------------------------------------------------------------------------------------------
+import java.util.ArrayList;
+
+public class Chef extends Thread
+{
+	boolean fin = false;
+	Chef chef = this;
+	private Object o1;
+	
+	public Chef()
+	{
+	}
+
+	public Chef(Object o1) 
+	{
+		this.o1 = o1;
+	}
+
+	public void run()
+	{
+		Order orders1 = Restaurant.orders.get(0);
+		fin = false;
+		synchronized(o1)
+		{
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			o1.notify();
+			this.fin = true;
+		}
+	}
+	
+	public static void main(String[] args) 
+	{
+		new Chef();
+	}
+}
+---------------------------------------------------------------------------------------------
+Order
+---------------------------------------------------------------------------------------------
+public class Order extends Thread
+{
+	String name;
+	
+	public Order()
+	{
+		this.name = "";
+	}
+	
+	public Order(String name)
+	{
+		this.name = name;
+	}
+	
+	public static void main(String[] args) 
+	{
+		new Order();
+	}
+}
+---------------------------------------------------------------------------------------------
+Restaurant (Driver)
+---------------------------------------------------------------------------------------------
+import java.util.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class Restaurant extends JFrame
+{
+	static ArrayList<Order>orders = new ArrayList<Order>();
+	Waiter waiter;
+	
+	public Restaurant()
+	{
+		super();
+		setTitle("Restaurant");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JPanel lay = new JPanel(new BorderLayout());
+		JPanel lay1 = new JPanel(new BorderLayout());
+		JPanel lay2 = new JPanel(new BorderLayout());
+		
+		JTextField food = new JTextField("											     			                 ");
+		
+		JLabel label = new JLabel("Enter the name of the dish of your choice");
+		JTextArea status = new JTextArea(40,50);
+		JLabel label2 = new JLabel("Status of dishes");
+		waiter = new Waiter(status);
+		
+		JButton submit = new JButton("Submit");
+		
+		submit.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String foods = food.getText();
+				Order o1 = new Order(foods);
+				orders.add(o1);
+				status.append("Meal being prepared: " + foods + "\n");
+				food.setText("											     			                 ");
+				waiter.Collect();
+			}
+		});
+		
+		lay1.add(food,BorderLayout.WEST);
+		lay1.add(label,BorderLayout.NORTH);
+		lay1.add(submit,BorderLayout.EAST);
+		
+		lay2.add(status,BorderLayout.SOUTH);
+		lay2.add(label2,BorderLayout.NORTH);
+		
+		lay.add(lay1,BorderLayout.NORTH);
+		lay.add(lay2,BorderLayout.SOUTH);
+		
+		getContentPane().add(lay);
+	}
+	
+	public static void main(String[] args) 
+	{
+		Restaurant win = new Restaurant();
+		win.pack();
+		win.setVisible(true);
+	}
+}
+---------------------------------------------------------------------------------------------
+Waiter
+---------------------------------------------------------------------------------------------
+import java.util.*;
+
+import javax.swing.JTextArea;
+
+public class Waiter 
+{
+	static ArrayList<Order>ordering = new ArrayList<Order>();
+	Object o1 = new Object();
+	Chef chef = new Chef(o1);
+	JTextArea status;
+	
+	public Waiter()
+	{
+	}
+	
+	public Waiter(JTextArea status) 
+	{
+		this.status = status;
+	}
+
+	public void Collect()
+	{
+		Order orders1 = Restaurant.orders.get(0);
+		Thread t1 = new Thread(chef);
+		t1.start();
+		synchronized(o1)
+		{
+		while(chef.fin = false)
+		{
+			try {
+				o1.wait();
+			}	catch (InterruptedException e) {
+					e.printStackTrace();
+			}
+		}
+		}
+		status.append("\nMeal is now completed");
+		
+	}
+	
+	public static void main(String[] args) 
+	{
+		new Waiter();
+	}
+}

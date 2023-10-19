@@ -1,5 +1,5 @@
 ![Untitled](https://github.com/OHA20/OHA20/assets/145617693/e488b9a4-e3ee-49ca-9d9a-44985f8169b1) 
-![giphy](https://github.com/OHA20/OHA20/assets/145617693/20cd0708-db4c-4d63-ba25-ee3f79334f25)
+<div align="center">![giphy](https://github.com/OHA20/OHA20/assets/145617693/20cd0708-db4c-4d63-ba25-ee3f79334f25)</div>
 
 - 👋 Hello, I’m Ola.
 - 👀 I’m really interested in computer science and business.

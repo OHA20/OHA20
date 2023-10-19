@@ -6,7 +6,7 @@
 - 😎 Big fan of coding in C#, Java and Python.
 - 🐱‍🏍 Enjoy Game Development, Ping-Pong and Movies.
   
-![giphy](https://github.com/OHA20/OHA20/assets/145617693/b179879b-525a-4cdc-8a9e-0108b1ce9ab2)![giphy](https://github.com/OHA20/OHA20/assets/145617693/aea73d70-6a6d-44ec-9e6e-8ab592ded50f)
+![giphy](https://github.com/OHA20/OHA20/assets/145617693/b179879b-525a-4cdc-8a9e-0108b1ce9ab2)![giphy]![cf95f54d66e86b735a6a549deb92c993_w200](https://github.com/OHA20/OHA20/assets/145617693/2c0853eb-6238-4353-84cb-1e3a3a3abe57)
 
 
 # Tech I Work With
